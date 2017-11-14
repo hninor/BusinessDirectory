@@ -13,10 +13,17 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.hnino.businessdirectory.adapter.BusinessDirectoryAdapter;
+import com.example.hnino.businessdirectory.business.EnterpriseBusiness;
+import com.example.hnino.businessdirectory.entities.Enterprise;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.example.hnino.businessdirectory.AddEnterpriseActivity.ID;
 
 public class BusinessDirectoryActivity extends AppCompatActivity {
 
@@ -25,6 +32,10 @@ public class BusinessDirectoryActivity extends AppCompatActivity {
 
     //private LineAdapter mAdapter;
     public static final int CREATE_REQUEST = 11;
+    public static final int EDIT_REQUEST = 12;
+    private BusinessDirectoryAdapter mBusinessDirectoryAdapter;
+    private EnterpriseBusiness mEnterpriseBusiness;
+    private int mPositionUpdated;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +44,7 @@ public class BusinessDirectoryActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mEnterpriseBusiness = new EnterpriseBusiness(getApplicationContext());
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -46,14 +58,15 @@ public class BusinessDirectoryActivity extends AppCompatActivity {
 
     private void setupRecycler() {
 
+        List<Enterprise> enterpriseList = mEnterpriseBusiness.getAll();
         // Configurando o gerenciador de layout para ser uma lista.
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         rvBusinessDirectory.setLayoutManager(layoutManager);
 
         // Adiciona o adapter que irá anexar os objetos à lista.
         // Está sendo criado com lista vazia, pois será preenchida posteriormente.
-        //mAdapter = new LineAdapter(new ArrayList<>(0));
-        //rvBusinessDirectory.setAdapter(mAdapter);
+        mBusinessDirectoryAdapter = new BusinessDirectoryAdapter(enterpriseList, mEnterpriseBusiness, this);
+        rvBusinessDirectory.setAdapter(mBusinessDirectoryAdapter);
 
         // Configurando um dividr entre linhas, para uma melhor visualização.
         rvBusinessDirectory.addItemDecoration(
@@ -61,5 +74,29 @@ public class BusinessDirectoryActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        // Check which request we're responding to
+        if (requestCode == CREATE_REQUEST) {
+            // Make sure the request was successful
+            if (resultCode == RESULT_OK) {
+                long id = data.getLongExtra(ID, -1);
+                Enterprise enterprise = mEnterpriseBusiness.searchEnterprise(id);
+                mBusinessDirectoryAdapter.updateList(enterprise);
+            }
+        } else if (requestCode == EDIT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                long id = data.getLongExtra(ID, -1);
+                mBusinessDirectoryAdapter.notifyItemChanged(mPositionUpdated);
+            }
 
+        }
+    }
+
+    public void updateEnterprise(Enterprise userModel, int position) {
+        mPositionUpdated = position;
+        Intent intent = new Intent(this, AddEnterpriseActivity.class);
+        intent.putExtra(ID, userModel.getId());
+        startActivityForResult(intent, EDIT_REQUEST);
+    }
 }

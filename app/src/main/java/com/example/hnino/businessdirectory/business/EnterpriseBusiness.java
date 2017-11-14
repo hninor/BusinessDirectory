@@ -9,6 +9,8 @@ import com.example.hnino.businessdirectory.entities.EnterpriseDao;
 
 import org.greenrobot.greendao.query.QueryBuilder;
 
+import java.util.List;
+
 /**
  * Created by hnino on 13/11/2017.
  */
@@ -23,20 +25,44 @@ public class EnterpriseBusiness {
         mDaoSession = mApp.getDaoSession();
     }
 
-    public void saveEnterprise(Enterprise acometidaDB) {
-        Enterprise tblRotAcometidaEncontradaDB = searchEnterprise(acometidaDB.getId());
-        if ( tblRotAcometidaEncontradaDB == null) {
-            mDaoSession.getEnterpriseDao().insert(acometidaDB);
-        } else {
-            acometidaDB.setId(tblRotAcometidaEncontradaDB.getId());
-            mDaoSession.getEnterpriseDao().update(acometidaDB);
-        }
+    public long saveEnterprise(Enterprise acometidaDB) {
+        return mDaoSession.getEnterpriseDao().insert(acometidaDB);
+    }
+
+    public void deleteEnterprise(Enterprise acometidaDB) {
+        mDaoSession.getEnterpriseDao().delete(acometidaDB);
+    }
+
+    public Enterprise searchEnterprise(long id) {
+        QueryBuilder<Enterprise> queryBuilder = mDaoSession.getEnterpriseDao().queryBuilder();
+        return queryBuilder.where(EnterpriseDao.Properties.Id.eq(id)).unique();
 
     }
 
-    public Enterprise searchEnterprise(long idOrdenTrabajo) {
+    public List<Enterprise> getAll() {
         QueryBuilder<Enterprise> queryBuilder = mDaoSession.getEnterpriseDao().queryBuilder();
-        return queryBuilder.where(EnterpriseDao.Properties.Id.eq(idOrdenTrabajo)).unique();
+        return queryBuilder.list();
+    }
 
+    public long saveEnterprise(String name, String url, String phone, String email, String products, String classification) {
+        Enterprise enterprise = new Enterprise();
+        enterprise.setName(name);
+        enterprise.setUrl(url);
+        enterprise.setPhone(phone);
+        enterprise.setEmail(email);
+        enterprise.setProducts(products);
+        enterprise.setClassification(classification);
+        return saveEnterprise(enterprise);
+    }
+
+    public void updateEnterprise(long id, String name, String url, String phone, String email, String products, String classification) {
+        Enterprise enterprise = searchEnterprise(id);
+        enterprise.setName(name);
+        enterprise.setUrl(url);
+        enterprise.setPhone(phone);
+        enterprise.setEmail(email);
+        enterprise.setProducts(products);
+        enterprise.setClassification(classification);
+        mDaoSession.getEnterpriseDao().update(enterprise);
     }
 }

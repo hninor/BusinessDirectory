@@ -2,29 +2,97 @@
 <RelativeLayout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="wrap_content"
-    android:layout_width="match_parent">
+    android:layout_width="match_parent"
+    android:layout_marginLeft="@dimen/fab_margin"
+    android:layout_marginRight="@dimen/fab_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/llInfo"
         android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/main_line_title"
-        tools:text="Line 1" />
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/name"
+                />
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvName"
+                tools:text="Line 1" />
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/products"
+                />
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvProducts"
+                tools:text="Line 1" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:text="@string/classification"
+                />
+
+            <TextView
+                android:layout_marginLeft="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tvClassification"
+                tools:text="Line 1" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 
     <ImageButton
+        android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/ibDelete"
-        android:id="@+id/ibAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_add_white_24px"
+        android:id="@+id/ibUpdate"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/colorAccent"
+        app:srcCompat="@drawable/ic_add_white_24px"
     />
 
     <ImageButton
+        android:layout_marginLeft="5dp"
+        android:layout_centerVertical="true"
         android:layout_alignParentRight="true"
         android:id="@+id/ibDelete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_delete_white_24px"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@color/colorAccent"
+        app:srcCompat="@drawable/ic_delete_white_24px"
         />
 
 </RelativeLayout>

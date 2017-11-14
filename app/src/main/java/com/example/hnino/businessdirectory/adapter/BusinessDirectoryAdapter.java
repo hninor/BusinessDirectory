@@ -7,7 +7,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.example.hnino.businessdirectory.BusinessDirectoryActivity;
 import com.example.hnino.businessdirectory.R;
+import com.example.hnino.businessdirectory.business.EnterpriseBusiness;
 import com.example.hnino.businessdirectory.entities.Enterprise;
 
 import java.util.ArrayList;
@@ -20,10 +22,14 @@ import java.util.Locale;
 
 public class BusinessDirectoryAdapter extends RecyclerView.Adapter<BusinessDirectoryAdapter.LineHolder> {
 
-    private final List<Enterprise> mUsers;
+    private List<Enterprise> mUsers;
+    private EnterpriseBusiness mEnterpriseBusiness;
+    private  BusinessDirectoryActivity mBusinessDirectoryActivity;
 
-    public BusinessDirectoryAdapter(ArrayList users) {
+    public BusinessDirectoryAdapter(List<Enterprise> users, EnterpriseBusiness enterpriseBusiness, BusinessDirectoryActivity businessDirectoryActivity) {
         mUsers = users;
+        mEnterpriseBusiness =  enterpriseBusiness;
+        mBusinessDirectoryActivity = businessDirectoryActivity;
     }
 
     @Override
@@ -34,11 +40,9 @@ public class BusinessDirectoryAdapter extends RecyclerView.Adapter<BusinessDirec
 
     @Override
     public void onBindViewHolder(LineHolder holder, final int position) {
-        holder.title.setText(String.format(Locale.getDefault(), "%s, %d - %s",
-                mUsers.get(position).getName(),
-                mUsers.get(position).getPhone(),
-                mUsers.get(position).getEmail()
-        ));
+        holder.tvName.setText(mUsers.get(position).getName());
+        holder.tvProducts.setText(mUsers.get(position).getProducts());
+        holder.tvClassification.setText(mUsers.get(position).getClassification());
 
         holder.moreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,12 +76,12 @@ public class BusinessDirectoryAdapter extends RecyclerView.Adapter<BusinessDirec
     // Método responsável por atualizar um usuário já existente na lista.
     private void updateItem(int position) {
         Enterprise userModel = mUsers.get(position);
-        //userModel.incrementAge();
-        notifyItemChanged(position);
+        mBusinessDirectoryActivity.updateEnterprise(userModel, position);
     }
 
     // Método responsável por remover um usuário da lista.
     private void removerItem(int position) {
+        mEnterpriseBusiness.deleteEnterprise(mUsers.get(position));
         mUsers.remove(position);
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mUsers.size());
@@ -90,15 +94,19 @@ public class BusinessDirectoryAdapter extends RecyclerView.Adapter<BusinessDirec
 
     public class LineHolder extends RecyclerView.ViewHolder {
 
-        public TextView title;
+        public TextView tvName;
+        public TextView tvProducts;
+        public TextView tvClassification;
         public ImageButton moreButton;
         public ImageButton deleteButton;
 
         public LineHolder(View itemView) {
             super(itemView);
-            title = (TextView) itemView.findViewById(R.id.main_line_title);
-            //moreButton = (ImageButton) itemView.findViewById(R.id.main_line_more);
-            //deleteButton = (ImageButton) itemView.findViewById(R.id.main_line_delete);
+            tvName = (TextView) itemView.findViewById(R.id.tvName);
+            tvProducts = (TextView) itemView.findViewById(R.id.tvProducts);
+            tvClassification = (TextView) itemView.findViewById(R.id.tvClassification);
+            moreButton = (ImageButton) itemView.findViewById(R.id.ibUpdate);
+            deleteButton = (ImageButton) itemView.findViewById(R.id.ibDelete);
         }
     }
 }

@@ -8,4 +8,6 @@
     <string name="email">Email</string>
     <string name="products">Products and Services</string>
     <string name="classification">Classification</string>
+    <string name="required">Required</string>
+    <string name="success_saved">Saved successful</string>
 </resources>
